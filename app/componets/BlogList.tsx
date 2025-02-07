@@ -1,7 +1,7 @@
 "use client";
 import React, { useState , useEffect} from "react";
 import Link from "next/link";
-
+import Image from "next/image";
 interface DataProps{
     id: number,
     author: string,
@@ -10,21 +10,34 @@ interface DataProps{
     url: string,
     date:string,
 }
-export default function(){
-    useEffect(()=>{
-        try {
-            const data = JSON.parse(localStorage.getItem('blog') || '[]');
-            setFilteredData(data);
-        } catch (error) {
-            console.error('the data is not sent');
-        }
-    },[])
+export default function BlogList () {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [filteredData, setFilteredData] = useState<DataProps[]>([]);
     const [expandedId, setExpandedId] = useState<number | null>(null);
-    const toggleExpanded = (id:number) => {
-        setExpandedId(expandedId === id ? null : id);
-    };
+    // useEffect(()=>{
+    //     try {
+    //         console.log('1111111111111111111');
+    //         const data = JSON.parse(localStorage.getItem('blog') || '[]');
+    //         setFilteredData(data);
+    //         console.log(filteredData);
+    //     } catch (error) {
+    //         console.error('the data is not sent');
+    //     }
+    // },[])
+
+    useEffect(() => {
+        try {
+            const data = JSON.parse(localStorage.getItem("blog") || "[]");
+            setFilteredData(data);
+        } catch (error) {
+            console.error("The data is not sent", error);
+        }
+    }, []);
+    
+    // Log data after state updates
+    useEffect(() => {
+        console.log("Updated filteredData:", filteredData);
+    }, [filteredData]);
     return(
         <>
             <div className="container bg-light"
@@ -41,10 +54,12 @@ export default function(){
                 {filteredData.map((item)=>
                 <div key={item.id} className="col-md-4">
                      <div className="card mb-3">
-                        
-                            <img src={item.url} alt="The Image"
-                            />
-                        
+                        <img
+                            src={item.url} 
+                            className="card-img-top"
+                            alt={item.title}
+                            
+                        />
                         <div className="card-body">
                             <h5 className="card-title">
                                 {item.title}
@@ -57,7 +72,7 @@ export default function(){
                                         `${item.description.substring(0, 50)}...`
                                 }
                             </p>
-                        </div>
+                        
                         <div className="d-flex justify-content-between 
                             align-items-center row">
                             <div>
@@ -74,6 +89,7 @@ export default function(){
                                     Read more
                                 </button>
                             </Link>
+                        </div>
                         </div>
                     </div>
                 </div>)}
