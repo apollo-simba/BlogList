@@ -21,7 +21,10 @@ export default function(){
     },[])
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [filteredData, setFilteredData] = useState<DataProps[]>([]);
-
+    const [expandedId, setExpandedId] = useState<number | null>(null);
+    const toggleExpanded = (id:number) => {
+        setExpandedId(expandedId === id ? null : id);
+    };
     return(
         <>
             <div className="container bg-light"
@@ -47,7 +50,12 @@ export default function(){
                                 {item.title}
                             </h5>
                             <p className="card-text">
-                            {item.description}
+                                {
+                                    expandedId ===
+                                        item.id ?
+                                        item.description :
+                                        `${item.description.substring(0, 50)}...`
+                                }
                             </p>
                         </div>
                         <div className="d-flex justify-content-between 
@@ -61,7 +69,7 @@ export default function(){
                                     {item.date}
                                 </small>
                             </div>
-                            <Link href={`/blog/${item.id}`}>
+                            <Link href={`/Bloglist/${item.id}`}>
                                 <button className='btn btn-primary'>
                                     Read more
                                 </button>
